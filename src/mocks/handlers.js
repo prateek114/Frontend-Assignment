@@ -1,18 +1,30 @@
 import { rest } from 'msw'
 
 export const handlers = [
-    // Handles a POST /login request
-    rest.post('/save', (req, res, ctx) => {
-        // Persist user's authentication in the session
-        console.log("Request",req);
-        // localStorage.setItem('data', )
-    
+
+  // Saves data to session storage
+    rest.post('/api/save', (req, res, ctx) => {
+
+      const catData = req.body.catData;
+      sessionStorage.setItem('cats', JSON.stringify(catData));
         return res(
-          // Respond with a 200 status code
           ctx.status(200),
+          ctx.json({
+            message: 'Data stored successfully.',
+          })
         )
-      }),
-  
-    // Handles a GET /user request
-    // rest.get('/user', null),
-  ]
+    }),
+
+    
+  // Gets data from session storage
+
+    rest.get('/api/get', (req, res, ctx) => {
+      const data = sessionStorage.getItem('cats');
+        return res(
+          ctx.status(200),
+          ctx.json({
+            data,
+          })
+        )
+    })
+]
